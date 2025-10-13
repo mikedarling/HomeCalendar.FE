@@ -1,5 +1,10 @@
 # RELEASE NOTES
 
+## v2.0.0
+
+- Updated screensaver functionality
+  - The module expects to get a list of images from a fixed path on a host that is designated in the environment variables.
+
 ## v1.0.0
 
 - List calendars from the user's Google Account to hide or show on the calendar.
