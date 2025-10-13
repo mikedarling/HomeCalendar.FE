@@ -124,9 +124,6 @@ const getEventDuration = (event: any): number => {
 
 const getOverlappingEvents = (event: any, events: any[]): any[] | null => {
   const overlaps = events.filter((e) => { return doesOverlap(event, e); });
-  if (event.summary == "Liv - Hip-Hop") {
-    console.log(`[dateUtils.getOverlappingEvents] ${event.summary} overlaps with ${overlaps.length} events.`);
-  }
 
   if (overlaps.length === 0) {
     return null;
