@@ -10,6 +10,7 @@ import dateUtils, { CalendarDate } from "@/utils/dateUtils"
 import themeUtils from "@/utils/themeUtils";
 import { useCalendar } from "@/context/calendar/CalendarContext";
 import StyleMap from "@/models/data/theme/StyleMap";
+import ControlBar from "./ControlBar";
 
 const Month: FC = () => {
   const { selectedCalendars, selectedDate } = useCalendar();
@@ -113,13 +114,7 @@ const Month: FC = () => {
 
   return (
     <>
-      <div className="mb-2 flex justify-between items-center">
-        <CalButton onClick={handlePrev} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Prev</CalButton>
-        <h3 className="font-medium">
-          {monthLabel}
-        </h3>
-        <CalButton onClick={handleNext} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Next</CalButton>
-      </div>
+      <ControlBar />
       {/* Calendar Wrapper */}
       <div className="w-full">
         {/* Weekday Header Row */}

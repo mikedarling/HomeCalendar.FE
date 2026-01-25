@@ -6,6 +6,7 @@ import AuthProvider from "@/context/oauth/AuthProivder";
 import ScreensaverOverlay from "../components/shared/ScreensaverOverlay";
 import FlyoutMenu from "@/components/shared/FlyoutMenu";
 import CalendarProvider from "@/context/calendar/CalendarProvider";
+import Header from "@/components/shared/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,22 +19,12 @@ export default function RootLayout({ children, header, flyout  }: { children: Re
       <body className={"antialiased"}>
         <AuthProvider>
           <CalendarProvider>
-            <header className="sticky top-0 z-50 p-2 bg-sky-600 text-white text-center text-sm">
-              <div className="flex flex-row relative items-center justify-between w-full">
-                <div className="absolute left-0">
-                  <FlyoutMenu>
-                    {flyout}
-                  </FlyoutMenu>
-                </div>
-                <h1 id="main-header-title" className="text-4xl flex-1 text-center">
-                  {header}
-                </h1>
-              </div>
-            </header>
-            <main className="m-auto w-16/20 py-5">
+            <Header header={header} />
+            <main>
               {children}
               <ScreensaverOverlay />
             </main>
+            <FlyoutMenu menu={flyout} />
           </CalendarProvider>
         </AuthProvider>
       </body>

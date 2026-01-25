@@ -7,6 +7,7 @@ import themeUtils from "@/utils/themeUtils";
 import { useCalendar } from "@/context/calendar/CalendarContext";
 import CalButton from "@/components/navigation/Button";
 import StyleMap from "@/models/data/theme/StyleMap";
+import ControlBar from "./ControlBar";
 
 const Week: FC = () => {
   const { selectedCalendars, selectedDate } = useCalendar();
@@ -111,15 +112,8 @@ const Week: FC = () => {
   };
 
   return (
-    <div>
-      <div className="mb-2 flex justify-between items-center">
-        <CalButton onClick={handlePrevWeek} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Prev</CalButton>
-        <h3 className="font-medium">
-          Week of {startOfWeek.toLocaleDateString()}
-        </h3>
-        <CalButton onClick={handleNextWeek} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Next</CalButton>
-      </div>
-      {/* Header Row for Dates */}
+    <>
+      <ControlBar />
       <div className="flex ml-[70px] mb-0">
         {days.map((date, dateIdx) => (
           <div key={dateIdx} className={ themeUtils.WEEKDAY_HEADER + " flex-1 border-r border-white" } >
@@ -207,7 +201,7 @@ const Week: FC = () => {
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 
