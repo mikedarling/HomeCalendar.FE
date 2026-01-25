@@ -24,7 +24,7 @@ export default function RootLayout({ children, header, flyout  }: { children: Re
               {children}
               <ScreensaverOverlay />
             </main>
-            <FlyoutMenu menu={flyout} />
+            <FlyoutMenu />
           </CalendarProvider>
         </AuthProvider>
       </body>
