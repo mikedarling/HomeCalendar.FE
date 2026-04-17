@@ -6,6 +6,8 @@ import CalendarContext from "./CalendarContext";
 const CalendarProvider = ({ children }: { children: ReactNode }) => {
   const [selectedCalendars, setSelectedCalendars] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [viewMode, setViewMode] = useState<"month" | "week">("week");
+  const [viewedDate, setViewedDate] = useState<Date>(new Date());
   const prevSelectedCalendars = useRef<string[] | null>(null);
   const didMount = useRef(false);
 
@@ -22,20 +24,17 @@ const CalendarProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    prevSelectedCalendars.current = selectedCalendars;
-  }, [selectedCalendars]);
-
-  useEffect(() => {
     if (!didMount.current) {
       didMount.current = true;
       return; // Skip effect on initial mount
     }
     // This code runs only when selectedCalendars changes after mount
+    prevSelectedCalendars.current = selectedCalendars;
     window.localStorage.setItem("selectedCalendars", JSON.stringify(selectedCalendars));
   }, [selectedCalendars]);
 
   return (
-    <CalendarContext.Provider value={{ selectedCalendars, setSelectedCalendars, selectedDate, setSelectedDate }}>
+    <CalendarContext.Provider value={{ selectedCalendars, setSelectedCalendars, selectedDate, setSelectedDate, viewMode, setViewMode, viewedDate, setViewedDate }}>
       {children}
     </CalendarContext.Provider>
   );

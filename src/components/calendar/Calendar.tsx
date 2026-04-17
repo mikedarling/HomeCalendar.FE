@@ -1,24 +1,29 @@
 "use client";
 
-import React, { useState, FC } from "react";
-import CalendarMonth from "@/components/calendar/Month";
-import CalendarWeek from "@/components/calendar/Week";
-import AuthProvider from "@/context/oauth/AuthProivder";
+import React, { FC } from "react";
+import Month from "@/components/calendar/Month";
+import Week from "@/components/calendar/Week";
+import AuthProvider from "@/context/oauth/AuthProvider";
 import CalendarProvider from "@/context/calendar/CalendarProvider";
+import { useCalendar } from "@/context/calendar/CalendarContext";
+
+const CalendarContent: FC = () => {
+  const calendarContext = useCalendar();
+
+  return calendarContext.viewMode === "month" ? (
+    <Month />
+  ) : (
+    <Week />
+  );
+};
 
 const Calendar: FC = () => {
-  const [view, setView] = useState<"month" | "week">("week");
-
   return (
     <AuthProvider>
       <CalendarProvider>
-        {view === "month" ? (
-          <CalendarMonth />
-        ) : (
-          <CalendarWeek />
-        )}
+        <CalendarContent />
       </CalendarProvider>
-  </AuthProvider>
+    </AuthProvider>
   );
 };
 

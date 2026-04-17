@@ -4,8 +4,8 @@ import { FC, PropsWithChildren } from "react";
 import ButtonProps from "@/models/props/component/navigation/ButtonProps";
 import themeUtils from "@/utils/themeUtils";
 
-const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, classNames, ariaLabel, disabled }) => {
-  const buttonClasses = themeUtils.compileButtonStyles(classNames || [], []);
+const Button: FC<PropsWithChildren<ButtonProps>> = ({ children, onClick, classNames, ariaLabel, disabled, customClasses }) => {
+  const buttonClasses = customClasses || themeUtils.compileButtonStyles(classNames || [], []);
 
   return (
     !ariaLabel

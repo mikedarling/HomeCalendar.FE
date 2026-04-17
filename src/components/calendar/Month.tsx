@@ -4,12 +4,10 @@
 
 import React, { FC, useEffect, useState } from "react";
 import EventBox from "./EventBox";
-import CalButton from "@/components/navigation/Button";
 
 import dateUtils, { CalendarDate } from "@/utils/dateUtils"
 import themeUtils from "@/utils/themeUtils";
 import { useCalendar } from "@/context/calendar/CalendarContext";
-import StyleMap from "@/models/data/theme/StyleMap";
 import ControlBar from "./ControlBar";
 
 const Month: FC = () => {
@@ -44,15 +42,6 @@ const Month: FC = () => {
   const initializeMonthLabel = (): string => {
     return getMonthLabel(selectedDate)
   }
-
-  const CALENDAR_NAV_BUTTON_CLASSES: StyleMap[] = [
-    { key: "px",
-      styles: [ {name: "default", value: "2"}]
-    },
-    { key: "py",
-      styles: [ {name: "default", value: "1"}]
-    },
-  ];
 
   // State declarations
   const [displayedMonth, setDisplayedMonth] = useState(selectedDate.getMonth());
@@ -89,23 +78,6 @@ const Month: FC = () => {
     fetchEvents();
   }, [selectedCalendars, displayedMonth, displayedYear]);
 
-  const handlePrev = () => {
-    if (displayedMonth != 0) {
-      setDisplayedMonth(displayedMonth - 1);
-      return;
-    }
-    setDisplayedYear(displayedYear - 1);
-    setDisplayedMonth(11);
-  }
-
-  const handleNext = () => {
-    if (displayedMonth != 11) {
-      setDisplayedMonth(displayedMonth + 1);
-      return;
-    }
-    setDisplayedYear(displayedYear + 1);
-    setDisplayedMonth(0);
-  }
 
   useEffect(() => {
     setDays(updateDays(new Date(displayedYear, displayedMonth, 1)));
