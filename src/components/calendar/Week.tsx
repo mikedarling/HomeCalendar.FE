@@ -1,30 +1,22 @@
-// TODO :: Refactor.
-
 import { FC, useEffect, useState, useMemo } from "react";
+
+import { useCalendar } from "@/context/calendar/CalendarContext";
+
+
 import EventBox from "@/components/calendar/EventBox";
+import ControlBar from "@/components/calendar/ControlBar";
+
 import dateUtils from "@/utils/dateUtils";
 import themeUtils from "@/utils/themeUtils";
-import { useCalendar } from "@/context/calendar/CalendarContext";
-import CalButton from "@/components/navigation/Button";
-import StyleMap from "@/models/data/theme/StyleMap";
+
 
 const Week: FC = () => {
-  const { selectedCalendars, selectedDate } = useCalendar();
+  const { selectedCalendars, viewedDate, setViewedDate } = useCalendar();
 
   // Only show 8:00 am (8) through 8:00 pm (20)
   const START_HOUR = 8;
   const END_HOUR = 20;
   const FIVE_MINUTE_BLOCKS = (END_HOUR - START_HOUR) * (60/5) + 1; // inclusive of 8:00pm
-  //const FIVE_MINUTE_HEIGHT = 4; // Height in pixels for each 5-minute block
-
-  const CALENDAR_NAV_BUTTON_CLASSES: StyleMap[] = [
-    { key: "px",
-      styles: [ {name: "default", value: "2"}]
-    },
-    { key: "py",
-      styles: [ {name: "default", value: "1"}]
-    },
-  ];
 
   function getStartOfWeek(date: Date) {
     const day = date.getDay(); // 0 (Sun) - 6 (Sat)
@@ -34,15 +26,13 @@ const Week: FC = () => {
 
   // Helper to format time in 12-hour format with am/pm
   function formatTime(hour: number, minute: number) {
-    const ampm = hour >= 12 ? "pm" : "am";
     let displayHour = hour % 12;
     if (displayHour === 0) {
       displayHour = 12;
     }
-    return `${displayHour}:${minute.toString().padStart(2, "0")} ${ampm}`;
+    return `${displayHour}:${minute.toString().padStart(2, "0")}`;
   }
 
-  const [viewedDate, setViewedDate] = useState(selectedDate);
   const [events, setEvents] = useState<any[]>([]);
   const startOfWeek = useMemo(() => getStartOfWeek(viewedDate), [viewedDate]);
   const days = Array.from({ length: 7 }, (_, i) => {
@@ -97,37 +87,22 @@ const Week: FC = () => {
     });
   }
 
-  // Handlers for Prev/Next week
-  const handlePrevWeek = () => {
-    const prev = new Date(startOfWeek);
-    prev.setDate(prev.getDate() - 7);
-    setViewedDate(prev);
-  };
-
-  const handleNextWeek = () => {
-    const next = new Date(startOfWeek);
-    next.setDate(next.getDate() + 7);
-    setViewedDate(next);
-  };
+  const weekdayHeader = (date: Date) => {
+    return (
+      <>
+        <div>{date.toLocaleDateString(undefined, { weekday: "short" })}</div>
+        <div>{date.toLocaleDateString(undefined, { day: "numeric" })}</div>
+      </>
+    )
+  }
 
   return (
-    <div>
-      <div className="mb-2 flex justify-between items-center">
-        <CalButton onClick={handlePrevWeek} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Prev</CalButton>
-        <h3 className="font-medium">
-          Week of {startOfWeek.toLocaleDateString()}
-        </h3>
-        <CalButton onClick={handleNextWeek} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Next</CalButton>
-      </div>
-      {/* Header Row for Dates */}
+    <>
+      <ControlBar />
       <div className="flex ml-[70px] mb-0">
         {days.map((date, dateIdx) => (
           <div key={dateIdx} className={ themeUtils.WEEKDAY_HEADER + " flex-1 border-r border-white" } >
-            {date.toLocaleDateString(undefined, {
-              weekday: "short",
-              month: "short",
-              day: "numeric",
-            })}
+            {weekdayHeader(date)}
           </div>
         ))}
       </div>
@@ -140,7 +115,7 @@ const Week: FC = () => {
             .map((slot, slotIdx) => (
               <div data-hour={slot.hour} data-minute={slot.minute}
                 key={slotIdx}
-                className="h-6 text-[11px] text-gray-500 flex items-center justify-center text-center pr-0"
+                className="h-12 text-sm text-gray-500 flex items-center justify-center text-center pr-0"
               >
                 {slot.label}
               </div>
@@ -173,7 +148,7 @@ const Week: FC = () => {
                   <div
                     key={slotIdx}
                     className={
-                      "h-1 cursor-pointer relative overflow-visible"
+                      "h-2 cursor-pointer relative overflow-visible" + ((slotIdx + 1) % 6 === 0 ? " border-b border-gray-200" : "")
                     }
                     onClick={() => {
                       const slotDate = new Date(date);
@@ -207,7 +182,7 @@ const Week: FC = () => {
           );
         })}
       </div>
-    </div>
+    </>
   );
 };
 

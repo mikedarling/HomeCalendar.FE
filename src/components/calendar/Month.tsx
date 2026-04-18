@@ -4,12 +4,11 @@
 
 import React, { FC, useEffect, useState } from "react";
 import EventBox from "./EventBox";
-import CalButton from "@/components/navigation/Button";
 
 import dateUtils, { CalendarDate } from "@/utils/dateUtils"
 import themeUtils from "@/utils/themeUtils";
 import { useCalendar } from "@/context/calendar/CalendarContext";
-import StyleMap from "@/models/data/theme/StyleMap";
+import ControlBar from "./ControlBar";
 
 const Month: FC = () => {
   const { selectedCalendars, selectedDate } = useCalendar();
@@ -43,15 +42,6 @@ const Month: FC = () => {
   const initializeMonthLabel = (): string => {
     return getMonthLabel(selectedDate)
   }
-
-  const CALENDAR_NAV_BUTTON_CLASSES: StyleMap[] = [
-    { key: "px",
-      styles: [ {name: "default", value: "2"}]
-    },
-    { key: "py",
-      styles: [ {name: "default", value: "1"}]
-    },
-  ];
 
   // State declarations
   const [displayedMonth, setDisplayedMonth] = useState(selectedDate.getMonth());
@@ -88,23 +78,6 @@ const Month: FC = () => {
     fetchEvents();
   }, [selectedCalendars, displayedMonth, displayedYear]);
 
-  const handlePrev = () => {
-    if (displayedMonth != 0) {
-      setDisplayedMonth(displayedMonth - 1);
-      return;
-    }
-    setDisplayedYear(displayedYear - 1);
-    setDisplayedMonth(11);
-  }
-
-  const handleNext = () => {
-    if (displayedMonth != 11) {
-      setDisplayedMonth(displayedMonth + 1);
-      return;
-    }
-    setDisplayedYear(displayedYear + 1);
-    setDisplayedMonth(0);
-  }
 
   useEffect(() => {
     setDays(updateDays(new Date(displayedYear, displayedMonth, 1)));
@@ -113,13 +86,7 @@ const Month: FC = () => {
 
   return (
     <>
-      <div className="mb-2 flex justify-between items-center">
-        <CalButton onClick={handlePrev} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Prev</CalButton>
-        <h3 className="font-medium">
-          {monthLabel}
-        </h3>
-        <CalButton onClick={handleNext} classNames={CALENDAR_NAV_BUTTON_CLASSES}>Next</CalButton>
-      </div>
+      <ControlBar />
       {/* Calendar Wrapper */}
       <div className="w-full">
         {/* Weekday Header Row */}
