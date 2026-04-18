@@ -8,6 +8,15 @@ export type TimeRange = {
   end: Date | null;
 };
 
+const getStartOfWeek = (date: Date): Date => {
+  const start = new Date(date);
+  const day = start.getDay();
+  const diff = start.getDate() - day; // Adjust to previous Sunday
+  start.setDate(diff);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
 const weekDays = [
   "Sunday",
   "Monday",
@@ -172,4 +181,5 @@ export default {
   getTimeDisplay,
   getEventDuration,
   getOverlappingEvents,
+  getStartOfWeek
 };

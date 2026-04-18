@@ -5,6 +5,7 @@ interface ButtonProps {
   disabled?: boolean;
   ariaLabel?: string;
   classNames?: StyleMap[];
+  customClasses?: string;
 }
 
 export default ButtonProps;

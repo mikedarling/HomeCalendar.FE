@@ -25,34 +25,31 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     document.cookie = `google_user=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   };
 
-  // Check whether there are valid tokens in the cookie (and not expired)
-  const checkLoggedIn = () => {
-    if (typeof document === "undefined") return false;
-    const tokens = readTokenCookie();
-    if (!tokens) return false;
-    // google token objects typically include `expiry_date` (ms since epoch)
-    if (typeof tokens.expiry_date === "number") {
-      if (tokens.expiry_date > Date.now()) return true;
-      // expired -> clear cookies and return false
-      clearAuthCookies();
-      return false;
-    }
-    // no expiry information -> assume valid presence means logged in
-    return true;
-  };
-
   useEffect(() => {
-    setLoggedIn(checkLoggedIn());
+    // Check if logged in
+    const handleCheck = () => {
+      if (typeof document === "undefined") return false;
+      const tokens = readTokenCookie();
+      if (!tokens) return false;
+      if (typeof tokens.expiry_date === "number") {
+        if (tokens.expiry_date > Date.now()) return true;
+        clearAuthCookies();
+        return false;
+      }
+      return true;
+    };
+
+    setLoggedIn(handleCheck());
 
     // Update on tab focus (handles login via redirect)
-    const onFocus = () => setLoggedIn(checkLoggedIn());
+    const onFocus = () => setLoggedIn(handleCheck());
     window.addEventListener("focus", onFocus);
 
     return () => window.removeEventListener("focus", onFocus);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ loggedIn, setLoggedIn }}>
+    <AuthContext.Provider value={{ loggedIn, setLoggedIn, logout: clearAuthCookies }}>
       {children}
     </AuthContext.Provider>
   );

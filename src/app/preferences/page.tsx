@@ -42,7 +42,7 @@ const Preferences: FC = () => {
   }, []);
 
   return (
-    <>
+    <div className="py-10 px-15">
       <h2 className="text-lg font-semibold mb-2">Calendar Colors</h2>
       {loading ? (
         <div>Loading calendars...</div>
@@ -93,7 +93,7 @@ const Preferences: FC = () => {
           })}
         </ul>
       )}
-   </>
+    </div>
   );
 };
 
