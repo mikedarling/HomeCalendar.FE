@@ -11,7 +11,7 @@ import { useCalendar } from "@/context/calendar/CalendarContext";
 import ControlBar from "./ControlBar";
 
 const Month: FC = () => {
-  const { selectedCalendars, selectedDate } = useCalendar();
+  const { selectedCalendars, selectedDate, viewedDate } = useCalendar();
 
   const [events, setEvents] = useState<any[]>([]);
 
@@ -78,6 +78,11 @@ const Month: FC = () => {
     fetchEvents();
   }, [selectedCalendars, displayedMonth, displayedYear]);
 
+
+  useEffect(() => {
+    setDisplayedMonth(viewedDate.getMonth());
+    setDisplayedYear(viewedDate.getFullYear());
+  }, [viewedDate]);
 
   useEffect(() => {
     setDays(updateDays(new Date(displayedYear, displayedMonth, 1)));

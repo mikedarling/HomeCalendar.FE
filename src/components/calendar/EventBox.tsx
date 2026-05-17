@@ -11,7 +11,8 @@ const EventBox: FC<EventBoxProps> = ({
   event,
   style,
   classes,
-  overlappingEvents
+  overlappingEvents,
+  hideTime = false,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalPosition, setModalPosition] = useState<{ x: number; y: number; width: number } | null>(null);
@@ -100,7 +101,7 @@ const EventBox: FC<EventBoxProps> = ({
         title={event.title}
         onClick={handleClick}
       >
-        <span className="font-bold">{eventStartTime}</span> {event.summary}
+        <span className="font-bold">{!hideTime && eventStartTime}</span> {event.summary}
       </div>
       {showModal && modalPosition && (
         <div

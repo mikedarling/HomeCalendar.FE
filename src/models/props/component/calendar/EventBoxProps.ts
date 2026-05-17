@@ -5,6 +5,7 @@ interface EventBoxProps {
   style?: CSSProperties;
   classes?: string[];
   overlappingEvents: any[] | null;
+  hideTime?: boolean;
   onMouseEnter?: (e: MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onMouseLeave?: (e: MouseEvent<HTMLDivElement, MouseEvent>) => void;
   onClick?: (e: MouseEvent<HTMLDivElement, MouseEvent>) => void;
