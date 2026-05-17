@@ -14,15 +14,15 @@ const ControlBar: FC = () => {
 
   const [controlBarTitle, setControlBarTitle] = useState("");
 
-  const startOfWeek = dateUtils.getStartOfWeek(calendarContext.selectedDate);
+  const startOfWeek = dateUtils.getStartOfWeek(calendarContext.viewedDate);
 
   useEffect(() => {
     if (calendarContext.viewMode == "week") {
       setControlBarTitle(`Week of ${startOfWeek.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`);
     } else {
-      setControlBarTitle(calendarContext.selectedDate.toLocaleDateString(undefined, { month: "long", year: "numeric" }));
+      setControlBarTitle(calendarContext.viewedDate.toLocaleDateString(undefined, { month: "long", year: "numeric" }));
     }
-  }, [calendarContext.selectedDate, calendarContext.viewMode, startOfWeek]);
+  }, [calendarContext.viewedDate, calendarContext.viewMode, startOfWeek]);
   
   // Handlers for Prev/Next week
   const handlePrevWeek = () => {
@@ -32,10 +32,27 @@ const ControlBar: FC = () => {
   };
 
   const handleNextWeek = () => {
-    const next = new Date(startOfWeek);
+    const next = new Date(calendarContext.viewedDate);
     next.setDate(next.getDate() + 7);
     calendarContext.setViewedDate(next);
   };
+
+  const handlePrevMonth = () => {
+    const prev = new Date(calendarContext.viewedDate);
+    prev.setDate(1);
+    prev.setMonth(prev.getMonth() - 1);
+    calendarContext.setViewedDate(prev);
+  };
+
+  const handleNextMonth = () => {
+    const next = new Date(calendarContext.viewedDate);
+    next.setDate(1);
+    next.setMonth(next.getMonth() + 1);
+    calendarContext.setViewedDate(next);
+  };
+
+  const handlePrev = calendarContext.viewMode === "week" ? handlePrevWeek : handlePrevMonth;
+  const handleNext = calendarContext.viewMode === "week" ? handleNextWeek : handleNextMonth;
 
 
 
@@ -52,14 +69,14 @@ const ControlBar: FC = () => {
         </Button>
       </div>
       <div className="flex items-center gap-4">
-        <Button onClick={handlePrevWeek} customClasses="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer hover:text-accent-foreground size-9 h-9 w-9 rounded-full text-accent hover:bg-accent/10">
+        <Button onClick={handlePrev} customClasses="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer hover:text-accent-foreground size-9 h-9 w-9 rounded-full text-accent hover:bg-accent/10">
           <LeftChevron />
-          <span className="sr-only">Previous week</span>
+          <span className="sr-only">Previous</span>
         </Button>
         <span className="text-base font-semibold text-primary min-w-[180px] text-center">{controlBarTitle}</span>
-        <Button onClick={handleNextWeek} customClasses="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer hover:text-accent-foreground size-9 h-9 w-9 rounded-full text-accent hover:bg-accent/10">
+        <Button onClick={handleNext} customClasses="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*='size-'])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer hover:text-accent-foreground size-9 h-9 w-9 rounded-full text-accent hover:bg-accent/10">
           <RightChevron />
-          <span className="sr-only">Next week</span>
+          <span className="sr-only">Next</span>
         </Button>
       </div>
       <div className="w-[88px]"></div>

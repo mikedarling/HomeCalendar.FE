@@ -106,6 +106,36 @@ const Week: FC = () => {
           </div>
         ))}
       </div>
+      {/* All-day event band */}
+      <div className="flex border-x border-t border-gray-300">
+        <div className="w-[70px] flex-shrink-0 border-r border-gray-200 bg-gray-50 h-18" />
+        {days.map((date, dateIdx) => {
+          const allDayEvents = events.filter(e => {
+            if (!!e.start?.dateTime || !e.start?.date) return false;
+            const start = new Date(e.start.date);
+            const end = new Date(e.end.date); // exclusive per Google API
+            const day = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            return start <= day && day < end;
+          });
+          return (
+            <div
+              key={dateIdx}
+              className={"h-18 flex-1 relative overflow-hidden" + (dateIdx < 6 ? " border-r border-gray-200" : "")}
+            >
+              {allDayEvents.map((event) => (
+                <EventBox
+                  key={event.id}
+                  event={event}
+                  style={{ height: "72px" }}
+                  classes={["absolute", "inset-x-0", "top-0"]}
+                  overlappingEvents={allDayEvents.length > 1 ? allDayEvents : null}
+                  hideTime
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
       {/* Time grid and day columns */}
       <div className="flex border border-gray-300 min-h-[600px]">
         {/* Time column */}
@@ -115,7 +145,7 @@ const Week: FC = () => {
             .map((slot, slotIdx) => (
               <div data-hour={slot.hour} data-minute={slot.minute}
                 key={slotIdx}
-                className="h-12 text-sm text-gray-500 flex items-center justify-center text-center pr-0"
+                className="h-9 text-sm text-gray-500 flex items-center justify-center text-center pr-0 border-b border-gray-200"
               >
                 {slot.label}
               </div>
@@ -134,11 +164,10 @@ const Week: FC = () => {
               }
             >
               {timeSlots.map((slot, slotIdx) => {
-                // Find events that start in this slot
+                // Find timed events (exclude all-day) that start in this slot
                 const slotEvents = events.filter((event) => {
-                  const start = new Date(
-                    event.start.dateTime || event.start.date,
-                  );
+                  if (!event.start?.dateTime) return false;
+                  const start = new Date(event.start.dateTime);
                   return (
                     start.getHours() === slot.hour &&
                     start.getMinutes() === slot.minute
@@ -148,7 +177,7 @@ const Week: FC = () => {
                   <div
                     key={slotIdx}
                     className={
-                      "h-2 cursor-pointer relative overflow-visible" + ((slotIdx + 1) % 6 === 0 ? " border-b border-gray-200" : "")
+                      "h-1.5 cursor-pointer relative overflow-visible" + ((slotIdx + 1) % 6 === 0 ? " border-b border-gray-200" : "")
                     }
                     onClick={() => {
                       const slotDate = new Date(date);
@@ -159,7 +188,7 @@ const Week: FC = () => {
                     {slotEvents.map((event) => {
                       // Calculate how many slots this event should span (precise, including partial slots)
                       const eventDuration = dateUtils.getEventDuration(event);
-                      const height = (eventDuration / 5) * 4; // 4px per 5-minute slot
+                      const height = (eventDuration / 5) * 6; // 6px per 5-minute slot
                       const evStyle = {
                         height: `${height}px`
                       };
